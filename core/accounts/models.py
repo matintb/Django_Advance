@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, PermissionMixin)
+from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, PermissionsMixin)
 from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
@@ -28,20 +28,20 @@ class UserManager(BaseUserManager):
             raise ValueError(_('superuser must have is_superuser=True'))
         return self.create_user(email,password,**extra_fields)
 
-class User(models.Model):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, unique=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     # is_verified = models.BooleanField(default=False)
-    f_name = models.CharField(max_length=31)
+    # f_name = models.CharField(max_length=31)
     
-    REQUIERED_FIELD = []
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
     
     created_date = models.DateTimeField(auto_now_add=True)
-    created_date = models.DateTimeField(auto_now=True)
+    updated_date = models.DateTimeField(auto_now=True)
     
     objects = UserManager()
     def __str__(self):
         return self.email
-    
